@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat Teman</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+  <div id="chat">
+    <div id="pesan"></div>
+    <input type="text" id="nama" placeholder="Nama Kamu">
+    <input type="text" id="isi-pesan" placeholder="Tulis pesan">
+    <button onclick="kirimPesan()">Kirim</button>
+  </div>
+
+  <script>
+    // Masukkan konfigurasi Firebase di sini
+    var firebaseConfig = {
+  apiKey: "AIzaSyCotbeosDqEb5J5sqr5TywBmi7emqjetlI",
+  authDomain: "infomase-2d676.firebaseapp.com",
+  databaseURL: "https://infomase-2d676-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "infomase-2d676",
+  storageBucket: "infomase-2d676.firebasestorage.app",
+  messagingSenderId: "1012515682268",
+  appId: "1:1012515682268:web:ed1df29e30a99618dac119",
+  measurementId: "G-NL4VBJBC1R"
+};
+      // Konfigurasi dari langkah 4
+    };
+    
+    // Inisialisasi Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Reference database
+    var database = firebase.database();
+    var pesanRef = database.ref('pesan');
+
+    // Fungsi kirim pesan
+    function kirimPesan() {
+      var nama = document.getElementById('nama').value;
+      var pesan = document.getElementById('isi-pesan').value;
+      
+      pesanRef.push({
+        nama: nama,
+        pesan: pesan,
+        waktu: Date.now()
+      });
+
+      document.getElementById('isi-pesan').value = '';
+    }
+
+    // Terima pesan
+    pesanRef.on('child_added', function(snapshot) {
+      var data = snapshot.val();
+      var pesanDiv = document.getElementById('pesan');
+      pesanDiv.innerHTML += 
+        `<p><strong>${data.nama}:</strong> ${data.pesan}</p>`;
+    });
+  </script>
+</body>
+</html>
